@@ -5,6 +5,7 @@ import 'package:brainy_mingles/widgets/custom_appbar.dart';
 import 'package:brainy_mingles/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardView extends StatefulWidget {
   const DashboardView({super.key});
@@ -14,6 +15,27 @@ class DashboardView extends StatefulWidget {
 }
 
 class _DashboardViewState extends State<DashboardView> {
+  String? authToken;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAuthToken();
+  }
+
+  Future<String?> retrieveToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
+
+  Future<void> _loadAuthToken() async {
+    final token = await retrieveToken();
+    setState(() {
+      authToken = token;
+    });
+    print("Token: $token");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

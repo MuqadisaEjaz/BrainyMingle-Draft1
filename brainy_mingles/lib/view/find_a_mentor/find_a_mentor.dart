@@ -9,6 +9,7 @@ import 'package:brainy_mingles/const/app_colors.dart';
 import 'package:brainy_mingles/widgets/custom_appbar.dart';
 import 'package:brainy_mingles/widgets/custom_textfield.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:brainy_mingles/widgets/custom_drawer.dart';
 
 class FindAMentorView extends StatefulWidget {
   const FindAMentorView({Key? key});
@@ -43,7 +44,7 @@ class _FindAMentorViewState extends State<FindAMentorView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const Drawer(),
+      drawer: const MentorDrawer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -113,100 +114,6 @@ class _FindAMentorViewState extends State<FindAMentorView> {
   }
 }
 
-// class MentorBox extends StatefulWidget {
-//   final String name;
-//   final String email;
-//   final String expertise;
-//   final String budget;
-
-//   const MentorBox({
-//     required this.name,
-//     required this.expertise,
-//     required this.email,
-//     required this.budget,
-//     Key? key,
-//   }) : super(key: key);
-
-//   @override
-//   State<MentorBox> createState() => _MentorBoxState();
-// }
-
-// class _MentorBoxState extends State<MentorBox> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       width: double.infinity,
-//       margin: EdgeInsets.only(bottom: 20.h),
-//       padding:
-//           EdgeInsets.only(top: 15.h, left: 15.w, right: 15.w, bottom: 12.h),
-//       decoration: ShapeDecoration(
-//         color: Colors.white,
-//         shape: RoundedRectangleBorder(
-//           side: const BorderSide(
-//             width: 0.30,
-//             strokeAlign: BorderSide.strokeAlignOutside,
-//             color: Color(0xE88A8888),
-//           ),
-//           borderRadius: BorderRadius.circular(18),
-//         ),
-//         shadows: const [
-//           BoxShadow(
-//             color: Color(0x14323247),
-//             blurRadius: 32,
-//             offset: Offset(0, 24),
-//           ),
-//         ],
-//       ),
-//       child: Column(
-//         mainAxisAlignment: MainAxisAlignment.start,
-//         children: [
-//           Text(
-//             widget.name,
-//             style: TextStyle(
-//               color: const Color(0xFF404345),
-//               fontSize: 16.sp,
-//               fontWeight: FontWeight.w700,
-//             ),
-//           ),
-//           Text(
-//             widget.expertise,
-//             style: TextStyle(
-//               color: Colors.black,
-//               fontSize: 12.sp,
-//               fontWeight: FontWeight.w400,
-//             ),
-//           ),
-//           Text(
-//             widget.budget,
-//             style: TextStyle(
-//               color: Colors.black,
-//               fontSize: 12.sp,
-//               fontWeight: FontWeight.w400,
-//             ),
-//           ),
-//           10.h.sbh,
-//           Row(
-//             children: [
-//               MyButton(
-//                 width: 120.w,
-//                 height: 40.h,
-//                 text: "Request Session",
-//                 textSize: 10.sp,
-//               ),
-//               const Spacer(),
-//               MyButton(
-//                 width: 120.w,
-//                 height: 40.h,
-//                 text: "Make your Bid",
-//                 textSize: 10.sp,
-//               ),
-//             ],
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }
 class MentorBox extends StatefulWidget {
   final String name;
   final String email;

@@ -25,9 +25,10 @@ class _SessionRequestState extends State<SessionRequest> {
   }
 
   Future<void> fetchDataFromBackend() async {
-    final mentorEmail = 'mariawasif@gmail.com'; // Hardcoded mentor email
+    final mentorEmail = 'anamfatima@gmail.com'; // Hardcoded mentor email
     final response = await http.get(
-      Uri.parse('http://10.0.2.2:4200/api/mentor/get-session-request'),
+      Uri.parse(
+          'http://10.0.2.2:4200/api/mentor/get-session-request?email=$mentorEmail'),
     );
 
     if (response.statusCode == 200) {
@@ -87,18 +88,20 @@ class _SessionRequestState extends State<SessionRequest> {
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 final sessionItem = sessionData[index];
+                final List<dynamic> sessions = sessionItem['sessions'];
+
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SessionRequestBox(
+                  children: sessions.map((session) {
+                    return SessionRequestBox(
                       studentName: sessionItem['studentName'],
                       studentEmail: sessionItem['studentEmail'],
-                      sessionType: sessionItem['sessions'][0]['sessionType'],
-                      time: sessionItem['sessions'][0]['time'],
-                      topic: sessionItem['sessions'][0]['topic'],
+                      sessionType: session['sessionType'],
+                      time: session['time'],
+                      topic: session['topic'],
                       fetchDataCallback: fetchDataFromBackend,
-                    ),
-                  ],
+                    );
+                  }).toList(),
                 );
               },
             ),
@@ -125,13 +128,16 @@ class SessionRequestBox extends StatelessWidget {
     this.topic,
     required this.fetchDataCallback,
   });
-
   Future<void> acceptRequest() async {
     final mentorEmail =
-        'mariawasif@gmail.com'; // Replace with the mentor's email
+        'anamfatima@gmail.com'; // Replace with the mentor's email
+
     final requestData = {
       "mentorEmail": mentorEmail,
-      "studentEmail": studentEmail, // Send the student's email
+      "studentEmail": studentEmail,
+      "sessionType": sessionType,
+      "time": time,
+      "topic": topic // Send the student's email
     };
 
     final response = await http.post(
@@ -152,10 +158,14 @@ class SessionRequestBox extends StatelessWidget {
 
   Future<void> declineRequest() async {
     final mentorEmail =
-        'mariawasif@gmail.com'; // Replace with the mentor's email
+        'anamfatima@gmail.com'; // Replace with the mentor's email
+
     final requestData = {
       "mentorEmail": mentorEmail,
-      "studentEmail": studentEmail, // Send the student's email
+      "studentEmail": studentEmail,
+      "sessionType": sessionType,
+      "time": time,
+      "topic": topic // Send the student's email
     };
 
     final response = await http.post(

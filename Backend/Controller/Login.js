@@ -38,7 +38,7 @@ const loginUser = async (req, res) => {
        let token
         try{
   
-          token=jwt.sign({_id:user._id},"Secret");
+          token=jwt.sign({email:user.email},"Secret");
   
         }catch(err){
   

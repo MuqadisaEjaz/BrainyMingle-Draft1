@@ -46,8 +46,8 @@ const mentorshipRequests = async (req, res) => {
 
 const studentsessionRequests = async (req, res) => {
 try{
-    const mentorEmail = "mariawasif@gmail.com"; // Assuming the mentor's email is in the request's user object
-
+    const mentorEmail = req.query.email; // Assuming the mentor's email is in the request's user object
+    console.log(mentorEmail)
     // Find the session requests for the mentor
     const sessionRequests = await SessionRequest.findOne({ mentorEmail });
     console.log(sessionRequests)
@@ -92,39 +92,43 @@ try{
 }
 
 
-
-const acceptSessionRequest  = async (req, res) => {
+const acceptSessionRequest = async (req, res) => {
   try {
-    const { mentorEmail, studentEmail } = req.body;
-    console.log(studentEmail)
+    const { mentorEmail, studentEmail, sessionType, topic, time } = req.body;
+
     // Find the session request for the mentor
     let existingSessionRequest = await SessionRequest.findOne({ mentorEmail });
 
     if (existingSessionRequest) {
-      // Find the student request in the session request
-      const studentRequestIndex = existingSessionRequest.sessionRequests.findIndex(
+      // Find the student request in the session request based on studentEmail
+      const sessionRequest = existingSessionRequest.sessionRequests.find(
         (request) => request.studentEmail === studentEmail
       );
 
-      if (studentRequestIndex !== -1) {
-        // You can perform additional checks or actions here based on the mentor's acceptance
-        // For example, you can send a notification to the student.
+      if (sessionRequest) {
+        // Remove the session detail requested based on sessionType, topic, and time
+        sessionRequest.sessions = sessionRequest.sessions.filter(
+          (session) =>
+            session.sessionType !== sessionType ||
+            session.topic !== topic ||
+            session.time !== time
+        );
 
-        // Remove the request as it's accepted
-        existingSessionRequest.sessionRequests.splice(studentRequestIndex, 1);
-
-        // Save the updated session request to the database
+        // Save the changes to the database
         await existingSessionRequest.save();
-      }
-    }
 
-    res.status(200).json({ message: 'Session request accepted successfully' });
+        res.status(200).json({ message: 'Session request accepted successfully' });
+      } else {
+        res.status(404).json({ message: 'No session request found for the student' });
+      }
+    } else {
+      res.status(404).json({ message: 'No session request found for the mentor' });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).send('Server error');
   }
-
-}
+};
 
 
 
@@ -133,34 +137,40 @@ const acceptSessionRequest  = async (req, res) => {
 // Create a new route for handling session request rejection
 const rejectSessionRequest  = async (req, res) => {
   try {
-    const { mentorEmail, studentEmail } = req.body;
+    const { mentorEmail, studentEmail, sessionType, topic, time } = req.body;
 
     // Find the session request for the mentor
     let existingSessionRequest = await SessionRequest.findOne({ mentorEmail });
 
     if (existingSessionRequest) {
-      // Find the student request in the session request
-      const studentRequestIndex = existingSessionRequest.sessionRequests.findIndex(
+      // Find the student request in the session request based on studentEmail
+      const sessionRequest = existingSessionRequest.sessionRequests.find(
         (request) => request.studentEmail === studentEmail
       );
 
-      if (studentRequestIndex !== -1) {
-        // You can perform additional checks or actions here based on the mentor's rejection
-        // For example, you can send a notification to the student.
+      if (sessionRequest) {
+        // Remove the session detail requested based on sessionType, topic, and time
+        sessionRequest.sessions = sessionRequest.sessions.filter(
+          (session) =>
+            session.sessionType !== sessionType ||
+            session.topic !== topic ||
+            session.time !== time
+        );
 
-        // Remove the request as it's rejected
-        existingSessionRequest.sessionRequests.splice(studentRequestIndex, 1);
-
-        // Save the updated session request to the database
+        // Save the changes to the database
         await existingSessionRequest.save();
-      }
-    }
 
-    res.status(200).json({ message: 'Session request rejected successfully' });
+        res.status(200).json({ message: 'Session request rejected successfully' });
+      } else {
+        res.status(404).json({ message: 'No session request found for the student' });
+      }
+    } else {
+      res.status(404).json({ message: 'No session request found for the mentor' });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).send('Server error');
   }
-}
+};
 
   export {mentorshipRequests,studentsessionRequests,acceptSessionRequest,rejectSessionRequest}

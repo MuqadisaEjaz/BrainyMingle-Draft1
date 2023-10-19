@@ -44,44 +44,14 @@ const createStudent = async (req, res) => {
       res.status(500).send('Server error');
     }
   };
-  
-
-
-  // const createSessionRequest = async (req, res) => {
-  //   try {
-  //     const { mentorEmail, sessionRequests } = req.body;
-  
-  //     // Find the existing session request for the mentor
-  //     let existingSessionRequest = await SessionRequest.findOne({ mentorEmail });
-  
-  //     // If there's no existing session request, create a new one
-  //     if (!existingSessionRequest) {
-  //       existingSessionRequest = new SessionRequest({
-  //         mentorEmail,
-  //         sessionRequests: [],
-  //       });
-  //     }
-  
-  //     // Add the new session requests to the existing array
-  //     existingSessionRequest.sessionRequests = [
-  //       ...existingSessionRequest.sessionRequests,
-  //       ...sessionRequests,
-  //     ];
-  
-  //     // Save the updated session request to the database
-  //     await existingSessionRequest.save();
-  
-  //     res.status(201).json({ message: 'Session request updated successfully' });
-  //   } catch (error) {
-  //     console.error(error);
-  //     res.status(500).send('Server error');
-  //   }
-  // };
 
   
   const createSessionRequest = async (req, res) => {
     try {
       const { mentorEmail, sessionRequests } = req.body;
+      const studentEmail=req.body.email;
+      console.log(studentEmail)
+
       console.log(sessionRequests)
       // Find the existing session request for the mentor
       let existingSessionRequest = await SessionRequest.findOne({ mentorEmail });
@@ -139,6 +109,9 @@ const createStudent = async (req, res) => {
     }
   };
   
+  
+  
+  
   const findMentors = async (req, res) => {
     try {
       const mentors = await Mentors.find().select('name email expertise budget');
@@ -148,5 +121,17 @@ const createStudent = async (req, res) => {
       res.status(500).json({ error: 'An error occurred while fetching mentorship requests' });
     }
   }
-  
-  export {createStudent,createSessionRequest,findMentors}
+
+  const getMyDetails = async (req, res) => {
+
+    try {
+      const email=req.body.email;
+      console.log(email)
+      const mentors = await Student.findOne({email});
+      res.status(200).json(mentors);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while fetching mentorship requests' });
+    }
+  }
+  export {createStudent,createSessionRequest,findMentors,getMyDetails}

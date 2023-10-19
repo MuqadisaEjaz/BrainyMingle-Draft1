@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:brainy_mingles/view/Mentor/main_home_view.dart';
 import 'package:brainy_mingles/view/Student/main_home_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key});
@@ -24,6 +25,11 @@ class _LoginViewState extends State<LoginView> {
 
   String? emailError;
   String? passwordError;
+
+  Future<void> storeToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', token);
+  }
 
   Future<void> performLogin() async {
     // Clear previous validation errors
@@ -65,6 +71,10 @@ class _LoginViewState extends State<LoginView> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final role = data["role"];
+        final token = data["token"];
+
+        // Store the token
+        await storeToken(token);
 
         String message;
 

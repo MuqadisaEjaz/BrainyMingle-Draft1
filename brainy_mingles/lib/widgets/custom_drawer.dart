@@ -2,6 +2,7 @@ import 'package:brainy_mingles/const/sizedbox_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:brainy_mingles/view/home/home_page_view.dart';
 
 class FacultyDrawer extends StatelessWidget {
   const FacultyDrawer({super.key});
@@ -131,15 +132,24 @@ class FacultyDrawer extends StatelessWidget {
                   width: 20.w,
                 ),
                 12.w.sbw,
-                Text(
-                  "Logout Account",
-                  style: TextStyle(
-                    color: const Color(0xffD55F5A),
-                    fontSize: 14.sp,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w500,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => HomePageView(),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    "Logout Account",
+                    style: TextStyle(
+                      color: const Color(0xffD55F5A),
+                      fontSize: 14.sp,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
+                )
               ],
             ),
           ],
@@ -167,20 +177,12 @@ class MentorDrawer extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 25.sp,
-                  backgroundImage: AssetImage("assets/mentor_images.png"),
+                  backgroundImage: AssetImage("assets/profile.png"),
                 ),
                 12.w.sbw,
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'MENTOR',
-                      style: TextStyle(
-                        color: const Color(0xFF757575),
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
                     Text(
                       'XYZ',
                       style: TextStyle(
@@ -328,15 +330,24 @@ class MentorDrawer extends StatelessWidget {
                   width: 20.w,
                 ),
                 12.w.sbw,
-                Text(
-                  "Logout Account",
-                  style: TextStyle(
-                    color: const Color(0xffD55F5A),
-                    fontSize: 14.sp,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w500,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => HomePageView(),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    "Logout Account",
+                    style: TextStyle(
+                      color: const Color(0xffD55F5A),
+                      fontSize: 14.sp,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
+                )
               ],
             ),
           ],
@@ -345,6 +356,7 @@ class MentorDrawer extends StatelessWidget {
     );
   }
 }
+
 // Reusable Row
 
 Widget reusableRow(String text, String iconImage) {
