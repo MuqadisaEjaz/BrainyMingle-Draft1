@@ -1,6 +1,7 @@
 import SessionRequest from '../Models/SessionRequests.js';
 import Student from '../Models/Student.js'
 import bcrypt from 'bcrypt';
+import Mentors from '../Models/Mentor.js';
 
 const createStudent = async (req, res) => {
     try {
@@ -76,10 +77,12 @@ const createStudent = async (req, res) => {
   //     res.status(500).send('Server error');
   //   }
   // };
+
+  
   const createSessionRequest = async (req, res) => {
     try {
       const { mentorEmail, sessionRequests } = req.body;
-  
+      console.log(sessionRequests)
       // Find the existing session request for the mentor
       let existingSessionRequest = await SessionRequest.findOne({ mentorEmail });
   
@@ -136,8 +139,14 @@ const createStudent = async (req, res) => {
     }
   };
   
-
+  const findMentors = async (req, res) => {
+    try {
+      const mentors = await Mentors.find().select('name email expertise budget');
+      res.status(200).json(mentors);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while fetching mentorship requests' });
+    }
+  }
   
-  
-
-  export {createStudent,createSessionRequest}
+  export {createStudent,createSessionRequest,findMentors}

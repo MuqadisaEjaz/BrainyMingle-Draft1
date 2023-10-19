@@ -1,22 +1,122 @@
 import 'package:brainy_mingles/const/app_colors.dart';
 import 'package:brainy_mingles/const/sizedbox_extension.dart';
-import 'package:brainy_mingles/view/main_home_view.dart';
 import 'package:brainy_mingles/widgets/custom_textfield.dart';
 import 'package:brainy_mingles/widgets/my_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:brainy_mingles/view/Mentor/main_home_view.dart';
+import 'package:brainy_mingles/view/Student/main_home_view.dart';
 
 class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+  const LoginView({Key? key});
 
   @override
   State<LoginView> createState() => _LoginViewState();
 }
 
-bool hidePassword = true;
-
 class _LoginViewState extends State<LoginView> {
+  bool hidePassword = true;
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  String? emailError;
+  String? passwordError;
+
+  Future<void> performLogin() async {
+    // Clear previous validation errors
+    setState(() {
+      emailError = null;
+      passwordError = null;
+    });
+
+    final email = emailController.text.trim();
+    final password = passwordController.text;
+
+    // Validate email and password
+    if (email.isEmpty || !isValidEmail(email)) {
+      setState(() {
+        emailError = "Please enter a valid email address";
+      });
+      return;
+    }
+
+    if (password.isEmpty) {
+      setState(() {
+        passwordError = "Password is required";
+      });
+      return;
+    }
+
+    final loginData = {
+      "email": email,
+      "password": password,
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse('http://10.0.2.2:4200/api/login'),
+        body: jsonEncode(loginData),
+        headers: {"Content-Type": "application/json"},
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final role = data["role"];
+
+        String message;
+
+        // Handle the user's role and set the message
+        if (role == "student") {
+          message = "Logged in as a Student";
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => MainHomeViewStudent()));
+        } else if (role == "mentor") {
+          message = "Logged in as a Mentor";
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => MainHomeViewMentor()));
+        } else if (role == "faculty") {
+          message = "Logged in as Faculty";
+        } else if (role == "admin") {
+          message = "Logged in as an Admin";
+        } else {
+          message = "Unknown role";
+        }
+
+        // Display the message on the screen
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(message),
+          duration: Duration(seconds: 2),
+        ));
+      } else {
+        // Handle login error, e.g., show an error message
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Login failed'),
+          duration: Duration(seconds: 2),
+        ));
+      }
+    } catch (error) {
+      // Handle network errors or other exceptions
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Error: $error'),
+        duration: Duration(seconds: 2),
+      ));
+    }
+  }
+
+  bool isValidEmail(String email) {
+    return true;
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,18 +145,25 @@ class _LoginViewState extends State<LoginView> {
             child: Column(
               children: [
                 20.h.sbh,
-                const CustomTextField(hint: "Enter your email"),
+                CustomTextField(
+                  controller: emailController,
+                  hint: "Enter your email",
+                  //errorText: emailError,
+                ),
                 20.h.sbh,
                 CustomTextField(
+                  controller: passwordController,
                   hint: "Enter your password",
                   hidePassword: hidePassword,
                   suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          hidePassword = !hidePassword;
-                        });
-                      },
-                      icon: SvgPicture.asset("assets/visibility_password.svg")),
+                    onPressed: () {
+                      setState(() {
+                        hidePassword = !hidePassword;
+                      });
+                    },
+                    icon: SvgPicture.asset("assets/visibility_password.svg"),
+                  ),
+                  //  errorText: passwordError,
                 ),
                 20.h.sbh,
                 Align(
@@ -74,13 +181,9 @@ class _LoginViewState extends State<LoginView> {
                 ),
                 15.h.sbh,
                 MyButton(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const MainHomeView()));
-                    },
-                    text: "Login"),
+                  onTap: performLogin,
+                  text: "Login",
+                ),
                 50.h.sbh,
                 Text.rich(
                   TextSpan(

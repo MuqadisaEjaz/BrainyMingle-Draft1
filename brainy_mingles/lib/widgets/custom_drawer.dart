@@ -274,16 +274,6 @@ class MentorDrawer extends StatelessWidget {
             ),
             20.h.sbh,
             Text(
-              'Mentorship Requests',
-              style: TextStyle(
-                color: const Color(0xFF757575),
-                fontSize: 14.sp,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            20.h.sbh,
-            Text(
               'Report and Block',
               style: TextStyle(
                 color: const Color(0xFF757575),

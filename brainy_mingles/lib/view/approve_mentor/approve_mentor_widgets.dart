@@ -110,14 +110,14 @@ class _ApproveMentorBoxState extends State<ApproveMentorBox> {
           Row(
             children: [
               MyButton(
-                width: 135.w,
+                width: 120.w,
                 height: 40.h,
                 text: "Accept Request",
                 textSize: 10.sp,
               ),
               const Spacer(),
               MyButton(
-                width: 135.w,
+                width: 120.w,
                 height: 40.h,
                 text: "Decline Request",
                 textSize: 10.sp,

@@ -27,6 +27,10 @@ const mentorshipRequestSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  budget: {
+    type: String,
+    required: true,
+  },
   expertise: {
     type: [String],
   },
